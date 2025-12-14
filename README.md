@@ -19,7 +19,7 @@ These are the Features that Lynx is expected to provude to the users:
 ## Contributors
 
 <p align="left">
-  <a href="https://github.com/the-asherbrook-06"><img src="https://avatars.githubusercontent.com/u/169687878?v=4" width="60" style="border-radius:50%; margin:10px;" /></a>
-  <a href="https://github.com/Devdarshananandhan"><img src="https://avatars.githubusercontent.com/u/153415560?v=4" width="60" style="border-radius:50%; margin:10px;" /></a>
-  <a href="https://github.com/2005-rafi"><img src="https://avatars.githubusercontent.com/u/236315376?v=4" width="60" style="border-radius:50%; margin:10px;" /></a>
+  <a href="https://github.com/the-asherbrook-06"><img src="https://avatars.githubusercontent.com/u/169687878?v=4" width="60"/></a>
+  <a href="https://github.com/Devdarshananandhan"><img src="https://avatars.githubusercontent.com/u/153415560?v=4" width="60"/></a>
+  <a href="https://github.com/2005-rafi"><img src="https://avatars.githubusercontent.com/u/236315376?v=4" width="60"/></a>
 </p>
