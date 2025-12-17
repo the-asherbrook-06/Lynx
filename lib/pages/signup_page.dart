@@ -35,7 +35,7 @@ class _SignupPageState extends ConsumerState<SignupPage> {
           child: Column(
             children: [
               const SizedBox(height: 40),
-              SvgPicture.asset('assets/$brightness/access_account.svg', height: 200),
+              SvgPicture.asset('assets/$brightness/sign_up.svg', height: 200),
               Expanded(child: SizedBox()),
               TextFormField(
                 decoration: InputDecoration(
