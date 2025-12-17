@@ -29,8 +29,9 @@ class Lynx extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: theme.light(),
       darkTheme: theme.dark(),
+      initialRoute: '/welcome',
       routes: {
-        '/': (_) => const WelcomePage(),
+        '/welcome': (_) => const WelcomePage(),
         '/login': (_) => const LoginPage(),
         '/signup': (_) => const SignupPage(),
       },
