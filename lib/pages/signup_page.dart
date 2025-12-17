@@ -26,6 +26,7 @@ class _SignupPageState extends ConsumerState<SignupPage> {
           },
           icon: Icon(HugeIconsStroke.arrowLeft01),
         ),
+        centerTitle: false,
         title: Text("Signup", style: Theme.of(context).textTheme.headlineSmall),
       ),
       body: Form(

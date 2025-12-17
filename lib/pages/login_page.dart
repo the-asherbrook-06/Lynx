@@ -26,6 +26,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
           },
           icon: Icon(HugeIconsStroke.arrowLeft01),
         ),
+        centerTitle: false,
         title: Text("Login", style: Theme.of(context).textTheme.headlineSmall),
       ),
       body: Form(
