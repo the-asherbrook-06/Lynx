@@ -42,5 +42,6 @@ Features for Lynx include:
 -	[ ] Clear, structured, and efficient collaboration
 
 ## App Status
-> [!WARNING] In Development
-Lynx is currently in the early stages of development. Planned features will be rolled out gradually. Thank you for supporting the project!
+> [!WARNING]
+> In Development  
+> Lynx is currently in the early stages of development. Planned features will be rolled out gradually. Thank you for supporting the project!
