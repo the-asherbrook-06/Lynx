@@ -1,8 +1,7 @@
 // packages
-import 'package:flutter/material.dart';
+import 'package:flutter_breakpoints/flutter_breakpoints.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:lynx/pages/login_page.dart';
-import 'package:lynx/pages/signup_page.dart';
+import 'package:flutter/material.dart';
 
 // themes
 import 'package:lynx/theme/theme.dart';
@@ -10,6 +9,8 @@ import 'package:lynx/theme/util.dart';
 
 // Pages
 import 'package:lynx/pages/welcome_page.dart';
+import 'package:lynx/pages/login_page.dart';
+import 'package:lynx/pages/signup_page.dart';
 
 void main() {
   runApp(ProviderScope(child: const Lynx()));
@@ -30,6 +31,8 @@ class Lynx extends StatelessWidget {
       theme: theme.light(),
       darkTheme: theme.dark(),
       initialRoute: '/welcome',
+      builder: (context, child) =>
+          FlutterBreakpointProvider.builder(context: context, child: child),
       routes: {
         '/welcome': (_) => const WelcomePage(),
         '/login': (_) => const LoginPage(),

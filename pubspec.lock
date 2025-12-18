@@ -134,6 +134,14 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_breakpoints:
+    dependency: "direct main"
+    description:
+      name: flutter_breakpoints
+      sha256: "5e9db5b30925b1a4bdd616e930d1018adc951e78731c1a4bb648002d28f4bbca"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.1"
   flutter_lints:
     dependency: "direct dev"
     description:
