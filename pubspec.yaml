@@ -39,6 +39,7 @@ dependencies:
   flutter_riverpod: ^3.0.3
   hugeicons_pro: ^0.0.2
   flutter_breakpoints: ^1.0.1
+  firebase_core: ^4.3.0
 
 dev_dependencies:
   flutter_test:
