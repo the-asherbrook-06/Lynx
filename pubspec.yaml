@@ -40,6 +40,8 @@ dependencies:
   hugeicons_pro: ^0.0.2
   flutter_breakpoints: ^1.0.1
   firebase_core: ^4.3.0
+  firebase_auth: ^6.1.3
+  url_launcher: ^6.3.2
 
 dev_dependencies:
   flutter_test:
