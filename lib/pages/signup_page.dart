@@ -151,7 +151,9 @@ class _SignupPageState extends ConsumerState<SignupPage> {
                             _obscurePassword = !_obscurePassword;
                           });
                         },
-                        icon: Icon(_obscurePassword? HugeIconsStroke.view: HugeIconsStroke.viewOffSlash),
+                        icon: Icon(
+                          _obscurePassword ? HugeIconsStroke.view : HugeIconsStroke.viewOffSlash,
+                        ),
                       ),
                       border: OutlineInputBorder(borderRadius: BorderRadius.circular(20)),
                     ),
@@ -171,7 +173,11 @@ class _SignupPageState extends ConsumerState<SignupPage> {
                             _obscureRepeatPassword = !_obscureRepeatPassword;
                           });
                         },
-                        icon: Icon(_obscureRepeatPassword? HugeIconsStroke.view: HugeIconsStroke.viewOffSlash),
+                        icon: Icon(
+                          _obscureRepeatPassword
+                              ? HugeIconsStroke.view
+                              : HugeIconsStroke.viewOffSlash,
+                        ),
                       ),
                       border: OutlineInputBorder(borderRadius: BorderRadius.circular(20)),
                     ),
@@ -227,20 +233,20 @@ class _SignupPageState extends ConsumerState<SignupPage> {
                             ),
                           ),
                   ),
-                  const SizedBox(height: 8),
-                  Divider(),
-                  const SizedBox(height: 8),
-                  Column(
-                    children: [
-                      Text("Sign in using"),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          IconButton(onPressed: () {}, icon: Icon(HugeIconsStroke.google)),
-                        ],
-                      ),
-                    ],
-                  ),
+                  // const SizedBox(height: 8),
+                  // Divider(),
+                  // const SizedBox(height: 8),
+                  // Column(
+                  //   children: [
+                  //     Text("Sign in using"),
+                  //     Row(
+                  //       mainAxisAlignment: MainAxisAlignment.center,
+                  //       children: [
+                  //         IconButton(onPressed: () {}, icon: Icon(HugeIconsStroke.google)),
+                  //       ],
+                  //     ),
+                  //   ],
+                  // ),
                   SizedBox(height: MediaQuery.of(context).viewPadding.bottom),
                 ],
               ),
