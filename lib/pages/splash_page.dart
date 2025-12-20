@@ -1,12 +1,18 @@
+// Packages
 import 'dart:async';
 
-import 'package:flutter/material.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:flutter_breakpoints/flutter_breakpoints.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:svg_flutter/svg_flutter.dart';
+import 'package:flutter/material.dart';
 
-import '../provider/brightness_provider.dart';
+// Provider
+import 'package:lynx/provider/brightness_provider.dart';
+import 'package:lynx/provider/auth_provider.dart';
+
+// Enums
+import 'package:lynx/enums/auth_status_enum.dart';
 
 class SplashPage extends ConsumerStatefulWidget {
   const SplashPage({super.key});
@@ -15,44 +21,53 @@ class SplashPage extends ConsumerStatefulWidget {
   ConsumerState<SplashPage> createState() => _SplashPageState();
 }
 
-class _SplashPageState extends ConsumerState<SplashPage>
-    with SingleTickerProviderStateMixin {
-  Timer? _navTimer;
-
+class _SplashPageState extends ConsumerState<SplashPage> with SingleTickerProviderStateMixin {
   late final AnimationController _controller;
-  late final Animation<double> _fade;
   late final Animation<double> _logoScale;
+  late final Animation<double> _fade;
+
+  bool _delayCompleted = false;
+  AuthStatus? _pendingStatus;
+  Timer? _delayTimer;
+
+  bool _navigated = false;
 
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(
-      vsync: this,
-      duration: const Duration(seconds: 4),
-    );
 
+    _controller = AnimationController(vsync: this, duration: const Duration(seconds: 4));
     _fade = CurvedAnimation(parent: _controller, curve: Curves.easeOutCubic);
-
     _logoScale = Tween<double>(
       begin: 0.92,
       end: 1.0,
     ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOutBack));
 
-
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (mounted) _controller.forward();
+    _controller.forward();
+    _delayTimer = Timer(const Duration(seconds: 3), () {
+      _delayCompleted = true;
+      _tryNavigate();
     });
-    _navTimer = Timer(const Duration(seconds: 6), _goNext);
   }
 
-  void _goNext() {
-    if (!mounted) return;
-    Navigator.of(context).pushNamedAndRemoveUntil('/welcome', (route) => false);
+  void _tryNavigate() {
+    if (!mounted || _navigated) return;
+    if (!_delayCompleted || _pendingStatus == null) return;
+
+    _navigated = true;
+
+    final route = switch (_pendingStatus!) {
+      AuthStatus.unauthenticated => '/welcome',
+      AuthStatus.unverified => '/welcome',
+      AuthStatus.verified => '/home',
+    };
+
+    Navigator.of(context).pushNamedAndRemoveUntil(route, (route) => false);
   }
 
   @override
   void dispose() {
-    _navTimer?.cancel();
+    _delayTimer?.cancel();
     _controller.dispose();
     super.dispose();
   }
@@ -66,8 +81,8 @@ class _SplashPageState extends ConsumerState<SplashPage>
     final brightnessFolder = ref.watch(brightnessProvider);
 
     final media = MediaQuery.of(context);
-    final size = media.size;
     final bottomInset = media.viewPadding.bottom;
+    final size = media.size;
 
     final colorScheme = Theme.of(context).colorScheme;
     final textTheme = Theme.of(context).textTheme;
@@ -106,6 +121,13 @@ class _SplashPageState extends ConsumerState<SplashPage>
         ? 48.0
         : 44.0;
 
+    ref.listen<AsyncValue<AuthStatus>>(authStatusProvider, (prev, next) {
+      next.whenData((status) {
+        _pendingStatus = status;
+        _tryNavigate();
+      });
+    });
+
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.all(8),
@@ -115,10 +137,7 @@ class _SplashPageState extends ConsumerState<SplashPage>
             width: containerWidth,
             padding: cardPadding,
             margin: cardMargin,
-            decoration: BoxDecoration(
-              color: cardColor,
-              borderRadius: BorderRadius.circular(34),
-            ),
+            decoration: BoxDecoration(color: cardColor, borderRadius: BorderRadius.circular(34)),
             child: AnimatedBuilder(
               animation: _controller,
               builder: (context, _) {
@@ -141,9 +160,7 @@ class _SplashPageState extends ConsumerState<SplashPage>
                       const SizedBox(height: 4),
                       Text(
                         "Connect, Organize, Flow",
-                        style: textTheme.bodyMedium?.copyWith(
-                          color: colorScheme.onSurfaceVariant,
-                        ),
+                        style: textTheme.bodyMedium?.copyWith(color: colorScheme.onSurfaceVariant),
                       ),
 
                       const Expanded(child: SizedBox()),
@@ -155,9 +172,7 @@ class _SplashPageState extends ConsumerState<SplashPage>
                       const SizedBox(height: 16),
                       Text(
                         "V.0.0.1",
-                        style: textTheme.labelMedium?.copyWith(
-                          color: colorScheme.outline,
-                        ),
+                        style: textTheme.labelMedium?.copyWith(color: colorScheme.outline),
                       ),
                       const SizedBox(height: 8),
                       SizedBox(height: bottomInset),
