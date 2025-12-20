@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "380805675112",
+    "project_id": "app-asher-lynx",
+    "storage_bucket": "app-asher-lynx.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:380805675112:android:fde86e6bf1137b7b4ee3dd",
+        "android_client_info": {
+          "package_name": "app.lynx"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "380805675112-o3pj975s8m5kdanumi7htu46poq0b5mv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBQmQLD5FSMTT_yzVayTqg0tB4T_cO8rFw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "380805675112-o3pj975s8m5kdanumi7htu46poq0b5mv.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "380805675112-pnn5j06lnon4uagvqak2mdtqapkaflem.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.riverpodTest"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

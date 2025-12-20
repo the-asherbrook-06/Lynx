@@ -8,7 +8,7 @@ class MaterialTheme {
   static ColorScheme lightScheme() {
     return const ColorScheme(
       brightness: Brightness.light,
-      primary: Color(0xff8a5022),
+      primary: Color(0xFF8A5022),
       surfaceTint: Color(0xff8a5022),
       onPrimary: Color(0xffffffff),
       primaryContainer: Color(0xffffdcc6),
@@ -336,15 +336,15 @@ class MaterialTheme {
   }
 
   ThemeData theme(ColorScheme colorScheme) => ThemeData(
-    useMaterial3: true,
-    brightness: colorScheme.brightness,
-    colorScheme: colorScheme,
-    textTheme: textTheme.apply(
-      bodyColor: colorScheme.onSurface,
-      displayColor: colorScheme.onSurface,
-    ),
-    scaffoldBackgroundColor: colorScheme.background,
-    canvasColor: colorScheme.surface,
+     useMaterial3: true,
+     brightness: colorScheme.brightness,
+     colorScheme: colorScheme,
+     textTheme: textTheme.apply(
+       bodyColor: colorScheme.onSurface,
+       displayColor: colorScheme.onSurface,
+     ),
+     scaffoldBackgroundColor: colorScheme.surface,
+     canvasColor: colorScheme.surface,
   );
 
   List<ExtendedColor> get extendedColors => [];

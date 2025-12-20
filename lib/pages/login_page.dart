@@ -6,6 +6,7 @@ import 'package:svg_flutter/svg_flutter.dart';
 import 'package:flutter/material.dart';
 
 // Providers
+import 'package:lynx/provider/auth_provider.dart';
 import 'package:lynx/provider/brightness_provider.dart';
 
 class LoginPage extends ConsumerStatefulWidget {
@@ -16,12 +17,57 @@ class LoginPage extends ConsumerStatefulWidget {
 }
 
 class _LoginPageState extends ConsumerState<LoginPage> {
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+
+  bool _obscurePassword = true;
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     final isTablet = Breakpoints.tablet.isBreakpoint(context);
     final isDesktop = Breakpoints.desktop.isBreakpoint(context);
     final isLargeDesktop = Breakpoints.largeDesktop.isBreakpoint(context);
+
     final brightness = ref.watch(brightnessProvider);
+    final authState = ref.watch(authControllerProvider);
+    final isLoading = authState is AsyncLoading;
+
+    ref.listen(authControllerProvider, (_, state) async {
+      state.whenOrNull(
+        data: (_) async {
+          final isVerified = await ref.read(authControllerProvider.notifier).checkEmailVerified();
+
+          if (!context.mounted) return;
+
+          if (isVerified) {
+            Navigator.pushNamedAndRemoveUntil(context, '/home', (_) => false);
+          } else {
+            Navigator.pushNamedAndRemoveUntil(context, '/verify', (_) => false);
+          }
+        },
+        error: (e, _) {
+          final message = e.toString();
+
+          if (message.contains('user-not-found')) {
+            ScaffoldMessenger.of(
+              context,
+            ).showSnackBar(const SnackBar(content: Text('Email not registered')));
+
+            Navigator.pushReplacementNamed(context, '/signup');
+          } else {
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
+          }
+        },
+      );
+    });
+
     return Scaffold(
       appBar: (isDesktop || isLargeDesktop)
           ? null
@@ -83,6 +129,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                   SvgPicture.asset('assets/$brightness/access_account.svg', height: 200),
                   Expanded(child: SizedBox()),
                   TextFormField(
+                    controller: _emailController,
                     decoration: InputDecoration(
                       label: Text("Email"),
                       prefixIcon: Icon(HugeIconsStroke.mail01),
@@ -91,9 +138,19 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                   ),
                   const SizedBox(height: 12),
                   TextFormField(
+                    controller: _passwordController,
+                    obscureText: _obscurePassword,
                     decoration: InputDecoration(
                       label: Text("Password"),
                       prefixIcon: Icon(HugeIconsStroke.squareLockPassword),
+                      suffixIcon: IconButton(
+                        onPressed: () {
+                          setState(() {
+                            _obscurePassword = !_obscurePassword;
+                          });
+                        },
+                        icon: Icon(_obscurePassword? HugeIconsStroke.view: HugeIconsStroke.viewOffSlash),
+                      ),
                       border: OutlineInputBorder(borderRadius: BorderRadius.circular(20)),
                     ),
                   ),
@@ -114,39 +171,51 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                   SizedBox(
                     height: 52,
                     width: double.infinity,
-                    child: ElevatedButton(
-                      style: ButtonStyle(
-                        backgroundColor: WidgetStatePropertyAll(
-                          Theme.of(context).colorScheme.primaryContainer,
-                        ),
-                        shape: WidgetStatePropertyAll(
-                          RoundedRectangleBorder(borderRadius: BorderRadiusGeometry.circular(20)),
-                        ),
-                      ),
-                      onPressed: () {},
-                      child: Text(
-                        "Login",
-                        style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                          color: Theme.of(context).colorScheme.onPrimaryContainer,
-                        ),
-                      ),
-                    ),
+                    child: isLoading
+                        ? Center(child: CircularProgressIndicator())
+                        : ElevatedButton(
+                            style: ButtonStyle(
+                              backgroundColor: WidgetStatePropertyAll(
+                                Theme.of(context).colorScheme.primaryContainer,
+                              ),
+                              shape: WidgetStatePropertyAll(
+                                RoundedRectangleBorder(
+                                  borderRadius: BorderRadiusGeometry.circular(20),
+                                ),
+                              ),
+                            ),
+                            onPressed: isLoading
+                                ? null
+                                : () {
+                                    ref
+                                        .read(authControllerProvider.notifier)
+                                        .login(
+                                          email: _emailController.text.trim(),
+                                          password: _passwordController.text.trim(),
+                                        );
+                                  },
+                            child: Text(
+                              "Login",
+                              style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                                color: Theme.of(context).colorScheme.onPrimaryContainer,
+                              ),
+                            ),
+                          ),
                   ),
-                  const SizedBox(height: 8),
-                  Divider(),
-                  const SizedBox(height: 8),
-                  Column(
-                    children: [
-                      Text("Sign in using"),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          IconButton(onPressed: () {}, icon: Icon(HugeIconsStroke.google)),
-                        ],
-                      ),
-                    ],
-                  ),
-
+                  // const SizedBox(height: 8),
+                  // Divider(),
+                  // const SizedBox(height: 8),
+                  // Column(
+                  //   children: [
+                  //     Text("Sign in using"),
+                  //     Row(
+                  //       mainAxisAlignment: MainAxisAlignment.center,
+                  //       children: [
+                  //         IconButton(onPressed: () {}, icon: Icon(HugeIconsStroke.google)),
+                  //       ],
+                  //     ),
+                  //   ],
+                  // ),
                   SizedBox(height: MediaQuery.of(context).viewPadding.bottom),
                 ],
               ),
