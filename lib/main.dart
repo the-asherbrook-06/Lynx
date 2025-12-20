@@ -10,6 +10,7 @@ import 'package:lynx/theme/theme.dart';
 import 'package:lynx/theme/util.dart';
 
 // Pages
+import 'package:lynx/pages/splash_page.dart';
 import 'package:lynx/pages/welcome_page.dart';
 import 'package:lynx/pages/login_page.dart';
 import 'package:lynx/pages/signup_page.dart';
@@ -35,10 +36,11 @@ class Lynx extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: theme.light(),
       darkTheme: theme.dark(),
-      initialRoute: '/welcome',
+      initialRoute: '/',
       builder: (context, child) =>
           FlutterBreakpointProvider.builder(context: context, child: child),
       routes: {
+        '/': (_) => const SplashPage(),
         '/welcome': (_) => const WelcomePage(),
         '/login': (_) => const LoginPage(),
         '/signup': (_) => const SignupPage(),
