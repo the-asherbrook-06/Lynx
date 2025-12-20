@@ -42,8 +42,7 @@ class VerifyPage extends ConsumerWidget {
                         ),
                         TextButton(
                           onPressed: () {
-                            Navigator.pop(context);
-                            Navigator.pop(context);
+                            Navigator.pushNamedAndRemoveUntil(context, '/welcome', (_) => false);
                           },
                           child: const Text("Leave"),
                         ),
@@ -103,8 +102,7 @@ class VerifyPage extends ConsumerWidget {
                                 ),
                                 TextButton(
                                   onPressed: () {
-                                    Navigator.pop(context);
-                                    Navigator.pop(context);
+                                    Navigator.pushNamedAndRemoveUntil(context, '/welcome', (_) => false);
                                   },
                                   child: const Text("Leave"),
                                 ),

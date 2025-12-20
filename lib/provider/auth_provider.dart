@@ -6,6 +6,9 @@ import 'package:flutter_riverpod/legacy.dart';
 // Repositories
 import 'package:lynx/repository/auth_repository.dart';
 
+// Enums
+import 'package:lynx/enums/auth_status_enum.dart';
+
 final firebaseAuthProvider = Provider<FirebaseAuth>((ref) {
   return FirebaseAuth.instance;
 });
@@ -28,6 +31,25 @@ final authControllerProvider = StateNotifierProvider<AuthController, AsyncValue<
 
 final resendCooldownProvider = StateProvider<bool>((ref) {
   return false;
+});
+
+final authStatusProvider = StreamProvider<AuthStatus>((ref) {
+  final auth = ref.watch(firebaseAuthProvider);
+
+  return auth.authStateChanges().asyncMap((user) async {
+    if (user == null) {
+      return AuthStatus.unauthenticated;
+    }
+
+    await user.reload();
+    final refreshedUser = auth.currentUser;
+
+    if (refreshedUser == null || !refreshedUser.emailVerified) {
+      return AuthStatus.unverified;
+    }
+
+    return AuthStatus.verified;
+  });
 });
 
 class AuthController extends StateNotifier<AsyncValue<void>> {
