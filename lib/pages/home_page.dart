@@ -49,7 +49,60 @@ class HomePage extends ConsumerWidget {
               )
             : null,
       ),
+      body: Row(
+        children: [
+          if (!isMobile)
+            NavigationRail(
+              backgroundColor: Theme.of(context).colorScheme.surfaceContainer,
+              labelType: NavigationRailLabelType.all,
+              useIndicator: false,
+
+              destinations: [
+                NavigationRailDestination(
+                  icon: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Icon(HugeIconsStroke.home01),
+                  ),
+                  label: Text("Home"),
+                ),
+                NavigationRailDestination(
+                  icon: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Icon(HugeIconsStroke.home01),
+                  ),
+                  label: Text("Home"),
+                ),
+              ],
+              leading: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: HomeFloatingActionButton(),
+              ),
+              trailingAtBottom: true,
+              selectedIndex: 0,
+            ),
+        ],
+      ),
+      floatingActionButton: isMobile ? HomeFloatingActionButton() : null,
+      bottomNavigationBar: isMobile
+          ? BottomNavigationBar(
+              backgroundColor: Theme.of(context).colorScheme.surfaceContainer,
+              items: [
+                BottomNavigationBarItem(icon: Icon(HugeIconsStroke.home01), label: "Home"),
+                BottomNavigationBarItem(icon: Icon(HugeIconsStroke.home01), label: "Home"),
+              ],
+              currentIndex: 0,
+            )
+          : null,
     );
+  }
+}
+
+class HomeFloatingActionButton extends StatelessWidget {
+  const HomeFloatingActionButton({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return FloatingActionButton(onPressed: () {}, child: Icon(HugeIconsStroke.add01));
   }
 }
 
@@ -59,6 +112,12 @@ class HomeSearchBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SearchBar(
+      hintText: "Search Organizations",
+      hintStyle: WidgetStatePropertyAll(
+        Theme.of(
+          context,
+        ).textTheme.bodyLarge?.copyWith(color: Theme.of(context).colorScheme.outline),
+      ),
       elevation: WidgetStatePropertyAll(0),
       trailing: [
         Padding(padding: const EdgeInsets.all(8.0), child: Icon(HugeIconsStroke.search01)),
