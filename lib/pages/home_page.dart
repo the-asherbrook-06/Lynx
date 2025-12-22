@@ -8,11 +8,30 @@ import 'package:flutter/material.dart';
 import 'package:lynx/provider/navigation_provider.dart';
 import 'package:lynx/provider/auth_provider.dart';
 
+// Pages
+import 'package:lynx/pages/spaces_page.dart';
+import 'package:lynx/pages/chats_page.dart';
+import 'package:lynx/pages/alerts_page.dart';
+
+class NavPage {
+  final String name;
+  final IconData icon;
+  final Widget page;
+
+  const NavPage({required this.name, required this.icon, required this.page});
+}
+
 class HomePage extends ConsumerWidget {
   const HomePage({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final pages = <NavPage>[
+      NavPage(name: 'Spaces', icon: HugeIconsStroke.office, page: SpacesPage()),
+      NavPage(name: 'Chats', icon: HugeIconsStroke.message01, page: AlertsPage()),
+      NavPage(name: 'Alerts', icon: HugeIconsStroke.notification02, page: ChatsPage()),
+    ];
+
     final isMobile = Breakpoints.mobile.isBreakpoint(context);
 
     final isRailExpanded = ref.watch(railExpandedProvider);
@@ -30,12 +49,21 @@ class HomePage extends ConsumerWidget {
         backgroundColor: Theme.of(context).colorScheme.surfaceContainer,
         centerTitle: false,
         title: isMobile
-            ? Text("Spaces")
+            ? Text(pages[selectedIndex].name)
             : Row(
                 children: [
-                  Text("Spaces"),
-                  const SizedBox(width: 18),
-                  Expanded(child: HomeSearchBar()),
+                  SizedBox(
+                    width: 100,
+                    child: Text(pages[selectedIndex].name)),
+                  // const SizedBox(width: 8),
+                  Flexible(
+                    child: ConstrainedBox(
+                      constraints: const BoxConstraints(
+                        maxWidth: 700,
+                      ),
+                      child: HomeSearchBar(hintText: "Search ${pages[selectedIndex].name}..."),
+                    ),
+                  ),
                 ],
               ),
         actions: [
@@ -49,7 +77,10 @@ class HomePage extends ConsumerWidget {
         bottom: isMobile
             ? PreferredSize(
                 preferredSize: Size.fromHeight(56),
-                child: Padding(padding: EdgeInsetsGeometry.all(8), child: HomeSearchBar()),
+                child: Padding(
+                  padding: EdgeInsetsGeometry.all(8),
+                  child: HomeSearchBar(hintText: "Search ${pages[selectedIndex].name}..."),
+                ),
               )
             : null,
       ),
@@ -92,43 +123,37 @@ class HomePage extends ConsumerWidget {
                     const SizedBox(height: 20),
                   ],
                 ),
-                destinations: [
-                  NavigationRailDestination(
-                    padding: EdgeInsets.symmetric(vertical: 4),
-                    icon: Icon(HugeIconsStroke.office),
-                    label: Text("Spaces"),
-                  ),
-                  NavigationRailDestination(
-                    padding: EdgeInsets.symmetric(vertical: 4),
-                    icon: Icon(HugeIconsStroke.message01),
-                    label: Text("Chats"),
-                  ),
-                  NavigationRailDestination(
-                    padding: EdgeInsets.symmetric(vertical: 4),
-                    icon: Icon(HugeIconsStroke.notification02),
-                    label: Text("Alerts"),
-                  ),
-                ],
+                destinations: pages.map((page) {
+                  return NavigationRailDestination(
+                    padding: const EdgeInsets.symmetric(vertical: 4),
+                    icon: Icon(page.icon),
+                    label: Text(page.name),
+                  );
+                }).toList(),
                 selectedIndex: selectedIndex,
                 onDestinationSelected: (index) {
                   ref.read(railIndexProvider.notifier).state = index;
                 },
               ),
             ),
+          Expanded(child: pages[selectedIndex].page),
         ],
       ),
       floatingActionButton: isMobile ? HomeFloatingActionButton(expanded: false) : null,
       bottomNavigationBar: isMobile
           ? BottomNavigationBar(
               backgroundColor: Theme.of(context).colorScheme.surfaceContainer,
-              items: [
-                BottomNavigationBarItem(icon: Icon(HugeIconsStroke.office), label: "Spaces"),
-                BottomNavigationBarItem(icon: Icon(HugeIconsStroke.message01), label: "Chats"),
-                BottomNavigationBarItem(
-                  icon: Icon(HugeIconsStroke.notification02),
-                  label: "Alerts",
-                ),
-              ],
+              selectedIconTheme: IconThemeData(color: Theme.of(context).colorScheme.primary),
+              unselectedIconTheme: IconThemeData(color: Theme.of(context).colorScheme.onSurface),
+              selectedLabelStyle: Theme.of(
+                context,
+              ).textTheme.labelLarge?.copyWith(color: Theme.of(context).colorScheme.primary),
+              unselectedLabelStyle: Theme.of(
+                context,
+              ).textTheme.labelLarge?.copyWith(color: Theme.of(context).colorScheme.onSurface),
+              items: pages.map((page) {
+                return BottomNavigationBarItem(icon: Icon(page.icon), label: page.name);
+              }).toList(),
               currentIndex: selectedIndex,
               onTap: (index) {
                 ref.read(railIndexProvider.notifier).state = index;
@@ -156,12 +181,14 @@ class HomeFloatingActionButton extends StatelessWidget {
 }
 
 class HomeSearchBar extends StatelessWidget {
-  const HomeSearchBar({super.key});
+  const HomeSearchBar({super.key, required this.hintText});
+
+  final String hintText;
 
   @override
   Widget build(BuildContext context) {
     return SearchBar(
-      hintText: "Search Spaces",
+      hintText: hintText,
       hintStyle: WidgetStatePropertyAll(
         Theme.of(
           context,
