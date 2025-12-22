@@ -5,6 +5,7 @@ import 'package:hugeicons_pro/hugeicons.dart';
 import 'package:flutter/material.dart';
 
 // Providers
+import 'package:lynx/provider/navigation_provider.dart';
 import 'package:lynx/provider/auth_provider.dart';
 
 class HomePage extends ConsumerWidget {
@@ -13,6 +14,9 @@ class HomePage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isMobile = Breakpoints.mobile.isBreakpoint(context);
+
+    final isRailExpanded = ref.watch(railExpandedProvider);
+    final selectedIndex = ref.watch(railIndexProvider);
 
     ref.listen(authStateProvider, (_, user) {
       if (user.value == null) {
@@ -26,10 +30,10 @@ class HomePage extends ConsumerWidget {
         backgroundColor: Theme.of(context).colorScheme.surfaceContainer,
         centerTitle: false,
         title: isMobile
-            ? Text("Organizations")
+            ? Text("Spaces")
             : Row(
                 children: [
-                  Text("Organizations"),
+                  Text("Spaces"),
                   const SizedBox(width: 18),
                   Expanded(child: HomeSearchBar()),
                 ],
@@ -52,45 +56,83 @@ class HomePage extends ConsumerWidget {
       body: Row(
         children: [
           if (!isMobile)
-            NavigationRail(
-              backgroundColor: Theme.of(context).colorScheme.surfaceContainer,
-              labelType: NavigationRailLabelType.all,
-              useIndicator: false,
-
-              destinations: [
-                NavigationRailDestination(
-                  icon: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Icon(HugeIconsStroke.home01),
-                  ),
-                  label: Text("Home"),
+            AnimatedSize(
+              duration: const Duration(milliseconds: 250),
+              curve: Curves.easeInOut,
+              child: NavigationRail(
+                minExtendedWidth: 160,
+                extended: isRailExpanded,
+                backgroundColor: Theme.of(context).colorScheme.surfaceContainer,
+                selectedIconTheme: IconThemeData(color: Theme.of(context).colorScheme.primary),
+                unselectedIconTheme: IconThemeData(color: Theme.of(context).colorScheme.onSurface),
+                selectedLabelTextStyle: Theme.of(
+                  context,
+                ).textTheme.labelLarge?.copyWith(color: Theme.of(context).colorScheme.primary),
+                unselectedLabelTextStyle: Theme.of(
+                  context,
+                ).textTheme.labelLarge?.copyWith(color: Theme.of(context).colorScheme.onSurface),
+                leading: Column(
+                  children: [
+                    IconButton(
+                      onPressed: () {
+                        ref.read(railExpandedProvider.notifier).state = !isRailExpanded;
+                      },
+                      icon: Icon(
+                        isRailExpanded ? HugeIconsStroke.menuCollapse : HugeIconsStroke.menu01,
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    AnimatedSize(
+                      duration: const Duration(milliseconds: 300),
+                      child: HomeFloatingActionButton(
+                        key: ValueKey(isRailExpanded),
+                        expanded: isRailExpanded,
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                  ],
                 ),
-                NavigationRailDestination(
-                  icon: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Icon(HugeIconsStroke.home01),
+                destinations: [
+                  NavigationRailDestination(
+                    padding: EdgeInsets.symmetric(vertical: 4),
+                    icon: Icon(HugeIconsStroke.office),
+                    label: Text("Spaces"),
                   ),
-                  label: Text("Home"),
-                ),
-              ],
-              leading: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: HomeFloatingActionButton(),
+                  NavigationRailDestination(
+                    padding: EdgeInsets.symmetric(vertical: 4),
+                    icon: Icon(HugeIconsStroke.message01),
+                    label: Text("Chats"),
+                  ),
+                  NavigationRailDestination(
+                    padding: EdgeInsets.symmetric(vertical: 4),
+                    icon: Icon(HugeIconsStroke.notification02),
+                    label: Text("Alerts"),
+                  ),
+                ],
+                selectedIndex: selectedIndex,
+                onDestinationSelected: (index) {
+                  ref.read(railIndexProvider.notifier).state = index;
+                },
               ),
-              trailingAtBottom: true,
-              selectedIndex: 0,
             ),
         ],
       ),
-      floatingActionButton: isMobile ? HomeFloatingActionButton() : null,
+      floatingActionButton: isMobile ? HomeFloatingActionButton(expanded: false) : null,
       bottomNavigationBar: isMobile
           ? BottomNavigationBar(
               backgroundColor: Theme.of(context).colorScheme.surfaceContainer,
               items: [
-                BottomNavigationBarItem(icon: Icon(HugeIconsStroke.home01), label: "Home"),
-                BottomNavigationBarItem(icon: Icon(HugeIconsStroke.home01), label: "Home"),
+                BottomNavigationBarItem(icon: Icon(HugeIconsStroke.office), label: "Spaces"),
+                BottomNavigationBarItem(icon: Icon(HugeIconsStroke.message01), label: "Chats"),
+                BottomNavigationBarItem(
+                  icon: Icon(HugeIconsStroke.notification02),
+                  label: "Alerts",
+                ),
               ],
-              currentIndex: 0,
+              currentIndex: selectedIndex,
+              onTap: (index) {
+                ref.read(railIndexProvider.notifier).state = index;
+              },
             )
           : null,
     );
@@ -98,11 +140,18 @@ class HomePage extends ConsumerWidget {
 }
 
 class HomeFloatingActionButton extends StatelessWidget {
-  const HomeFloatingActionButton({super.key});
+  const HomeFloatingActionButton({super.key, required this.expanded});
+
+  final bool expanded;
 
   @override
   Widget build(BuildContext context) {
-    return FloatingActionButton(onPressed: () {}, child: Icon(HugeIconsStroke.add01));
+    return FloatingActionButton.extended(
+      isExtended: expanded,
+      onPressed: () {},
+      label: const Text("New Chat"),
+      icon: const Icon(HugeIconsStroke.add01),
+    );
   }
 }
 
@@ -112,7 +161,7 @@ class HomeSearchBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SearchBar(
-      hintText: "Search Organizations",
+      hintText: "Search Spaces",
       hintStyle: WidgetStatePropertyAll(
         Theme.of(
           context,
