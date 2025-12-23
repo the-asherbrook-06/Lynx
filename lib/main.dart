@@ -13,7 +13,7 @@ import 'package:lynx/theme/util.dart';
 import 'package:lynx/pages/splash_page.dart';
 import 'package:lynx/pages/welcome_page.dart';
 import 'package:lynx/pages/login/page.dart' show LoginPage;
-import 'package:lynx/pages/signup_page.dart';
+import 'package:lynx/pages/signup/page.dart' show SignupPage;
 import 'package:lynx/pages/verify_page.dart';
 import 'package:lynx/pages/home_page.dart';
 
