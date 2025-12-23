@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 // Provider
 import 'package:lynx/provider/auth_provider.dart';
 
-final signupControllerProvider = StateNotifierProvider<SignupController, SignupState>((ref) {
+final signupControllerProvider = StateNotifierProvider.autoDispose<SignupController, SignupState>((ref) {
   return SignupController(ref);
 });
 
