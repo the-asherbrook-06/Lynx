@@ -31,9 +31,16 @@ Features for Lynx include:
 -	[ ] Google Calendar integration
 -	[ ] Google Contacts integration
 
+## Platforms Supported
+- [X] Android
+- [X] iOS
+- [X] ipadOS
+- [X] macOS
+- [X] Windows
+- [ ] Linux
+
 ## App Environment
 -	Framework: Flutter (v3.38.4)
--	Platform Support: Multi-platform
 
 ## Goals
 -	[ ] Minimal and intuitive user interface
