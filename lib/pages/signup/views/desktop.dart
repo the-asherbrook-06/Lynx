@@ -121,12 +121,12 @@ class SignupPageDesktop extends ConsumerWidget {
                   Row(
                     children: [
                       const SizedBox(width: 8),
-                      Text("Don't have an account?"),
+                      Text("Already have an account?"),
                       TextButton(
                         onPressed: () {
-                          Navigator.pushReplacementNamed(context, '/signup');
+                          Navigator.pushReplacementNamed(context, '/login');
                         },
-                        child: Text("Sign Up"),
+                        child: Text("Login"),
                       ),
                     ],
                   ),
@@ -147,7 +147,7 @@ class SignupPageDesktop extends ConsumerWidget {
                                 ),
                               ),
                             ),
-                            onPressed: () => controller.submit(),
+                            onPressed: () => controller.signup(),
                             child: Text(
                               "Login",
                               style: Theme.of(context).textTheme.bodyLarge?.copyWith(

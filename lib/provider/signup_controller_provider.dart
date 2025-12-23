@@ -50,7 +50,7 @@ class SignupController extends StateNotifier<SignupState> {
     state = state.copyWith(obscureRepeatPassword: !state.obscureRepeatPassword);
   }
 
-  Future<void> submit() async {
+  Future<void> signup() async {
     if (!formKey.currentState!.validate()) return;
 
     state = state.copyWith(isLoading: true);

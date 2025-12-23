@@ -28,6 +28,9 @@ class LoginController extends StateNotifier<LoginState> {
   LoginController(this.ref) : super(const LoginState());
 
   final Ref ref;
+
+  final formKey = GlobalKey<FormState>();
+
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
 
@@ -36,6 +39,8 @@ class LoginController extends StateNotifier<LoginState> {
   }
 
   Future<void> login(BuildContext context) async {
+    if (!formKey.currentState!.validate()) return;
+
     state = state.copyWith(isLoading: true);
 
     try {

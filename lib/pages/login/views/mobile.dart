@@ -51,90 +51,95 @@ class LoginPageMobile extends ConsumerWidget {
           },
         ),
       ),
-      body: Padding(
-        padding: EdgeInsets.all(16),
-        child: Column(
-          children: [
-            const SizedBox(height: 40),
-            SvgPicture.asset('assets/$brightness/access_account.svg', height: 200),
-            const Spacer(),
-            TextFormField(
-              controller: controller.emailController,
-              decoration: InputDecoration(
-                label: Text("Email"),
-                prefixIcon: Icon(HugeIconsStroke.mail01),
-                border: OutlineInputBorder(borderRadius: BorderRadius.circular(20)),
-              ),
-            ),
-            const SizedBox(height: 12),
-            TextFormField(
-              controller: controller.passwordController,
-              obscureText: state.obscurePassword,
-              decoration: InputDecoration(
-                label: Text("Password"),
-                prefixIcon: Icon(HugeIconsStroke.squareLockPassword),
-                suffixIcon: IconButton(
-                  onPressed: controller.togglePasswordVisibility,
-                  icon: Icon(
-                    state.obscurePassword ? HugeIconsStroke.view : HugeIconsStroke.viewOffSlash,
-                  ),
+      body: Form(
+        key: controller.formKey,
+        child: Padding(
+          padding: EdgeInsets.all(16),
+          child: Column(
+            children: [
+              const SizedBox(height: 40),
+              SvgPicture.asset('assets/$brightness/access_account.svg', height: 200),
+              const Spacer(),
+              TextFormField(
+                controller: controller.emailController,
+                validator: (v) => v != null && v.contains('@') ? null : 'Invalid email',
+                decoration: InputDecoration(
+                  label: Text("Email"),
+                  prefixIcon: Icon(HugeIconsStroke.mail01),
+                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(20)),
                 ),
-                border: OutlineInputBorder(borderRadius: BorderRadius.circular(20)),
               ),
-            ),
-            const SizedBox(height: 8),
-            Row(
-              children: [
-                const SizedBox(width: 8),
-                Text("Don't have an account?"),
-                TextButton(
-                  onPressed: () {
-                    Navigator.pushReplacementNamed(context, '/signup');
-                  },
-                  child: Text("Sign Up"),
-                ),
-              ],
-            ),
-            const SizedBox(height: 8),
-            SizedBox(
-              height: 52,
-              width: double.infinity,
-              child: state.isLoading
-                  ? Center(child: CircularProgressIndicator())
-                  : ElevatedButton(
-                      style: ButtonStyle(
-                        backgroundColor: WidgetStatePropertyAll(
-                          Theme.of(context).colorScheme.primaryContainer,
-                        ),
-                        shape: WidgetStatePropertyAll(
-                          RoundedRectangleBorder(borderRadius: BorderRadiusGeometry.circular(20)),
-                        ),
-                      ),
-                      onPressed: () => controller.login(context),
-                      child: Text(
-                        "Login",
-                        style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                          color: Theme.of(context).colorScheme.onPrimaryContainer,
-                        ),
-                      ),
+              const SizedBox(height: 12),
+              TextFormField(
+                controller: controller.passwordController,
+                obscureText: state.obscurePassword,
+                validator: (v) => v != null && v.length >= 6 ? null : 'Min 6 characters',
+                decoration: InputDecoration(
+                  label: Text("Password"),
+                  prefixIcon: Icon(HugeIconsStroke.squareLockPassword),
+                  suffixIcon: IconButton(
+                    onPressed: controller.togglePasswordVisibility,
+                    icon: Icon(
+                      state.obscurePassword ? HugeIconsStroke.view : HugeIconsStroke.viewOffSlash,
                     ),
-            ),
-            // const SizedBox(height: 8),
-            // Divider(),
-            // const SizedBox(height: 8),
-            // Column(
-            //   children: [
-            //     Text("Sign in using"),
-            //     Row(
-            //       mainAxisAlignment: MainAxisAlignment.center,
-            //       children: [
-            //         IconButton(onPressed: () {}, icon: Icon(HugeIconsStroke.google)),
-            //       ],
-            //     ),
-            //   ],
-            // ),
-            SizedBox(height: MediaQuery.of(context).viewPadding.bottom),
-          ],
+                  ),
+                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(20)),
+                ),
+              ),
+              const SizedBox(height: 8),
+              Row(
+                children: [
+                  const SizedBox(width: 8),
+                  Text("Don't have an account?"),
+                  TextButton(
+                    onPressed: () {
+                      Navigator.pushReplacementNamed(context, '/signup');
+                    },
+                    child: Text("Sign Up"),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 8),
+              SizedBox(
+                height: 52,
+                width: double.infinity,
+                child: state.isLoading
+                    ? Center(child: CircularProgressIndicator())
+                    : ElevatedButton(
+                        style: ButtonStyle(
+                          backgroundColor: WidgetStatePropertyAll(
+                            Theme.of(context).colorScheme.primaryContainer,
+                          ),
+                          shape: WidgetStatePropertyAll(
+                            RoundedRectangleBorder(borderRadius: BorderRadiusGeometry.circular(20)),
+                          ),
+                        ),
+                        onPressed: () => controller.login(context),
+                        child: Text(
+                          "Login",
+                          style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                            color: Theme.of(context).colorScheme.onPrimaryContainer,
+                          ),
+                        ),
+                      ),
+              ),
+              // const SizedBox(height: 8),
+              // Divider(),
+              // const SizedBox(height: 8),
+              // Column(
+              //   children: [
+              //     Text("Sign in using"),
+              //     Row(
+              //       mainAxisAlignment: MainAxisAlignment.center,
+              //       children: [
+              //         IconButton(onPressed: () {}, icon: Icon(HugeIconsStroke.google)),
+              //       ],
+              //     ),
+              //   ],
+              // ),
+              SizedBox(height: MediaQuery.of(context).viewPadding.bottom),
+            ],
+          ),
         ),
       ),
     );
